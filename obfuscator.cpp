@@ -101,9 +101,7 @@ void Obfuscator::removeMultyLineComments(const QString &source)
         if(!sourceLine.isNull()){
             QString outputLine = sourceLine;
 
-            while(removeMultyLineCommentsR(outputLine, inComment)){
-                ;
-            }
+            removeMultyLineCommentsR(outputLine, inComment);
             destinationStream << outputLine << "\r\n";
         }
     }while(!sourceLine.isNull());
@@ -148,6 +146,9 @@ bool Obfuscator::removeMultyLineCommentsR(QString &sourceLine, bool &inComment)
         }else{
             sourceLine.clear();
         }
+    }
+    if(found){
+        removeMultyLineCommentsR(sourceLine, inComment);
     }
     return found;
 }
