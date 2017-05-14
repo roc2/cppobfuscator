@@ -54,15 +54,7 @@ void Obfuscator::removeComments(const QString &source)
     do{
         sourceLine = sourceStream.readLine();
         if(!sourceLine.isNull()){
-            QStringList list = sourceLine.split("//");
-
-            assert(!list.isEmpty());
-
-            QString outputLine = list[0] + "\r\n";
-            destinationStream << outputLine;
-
-            qDebug() << "source:" << sourceLine;
-            qDebug() << "out:" << sourceLine;
+            destinationStream << removeCommentsFromLine(sourceLine);
         }
     }while(!sourceLine.isNull());
 
@@ -72,3 +64,15 @@ void Obfuscator::removeComments(const QString &source)
     sourceFile.remove();
     destinationFile.rename(source);
 }
+
+QString Obfuscator::removeCommentsFromLine(const QString &sourceLine)
+{
+    QStringList list = sourceLine.split("//");
+
+    assert(!list.isEmpty());
+
+    QString outputLine = list[0] + "\r\n";
+
+    return outputLine;
+}
+

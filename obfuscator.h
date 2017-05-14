@@ -10,6 +10,7 @@ private:
     Obfuscator(Obfuscator&);
     QString getTmpFilename(const QString &source);
     void removeComments(const QString &source);
+    QString removeCommentsFromLine(const QString &sourceLine);
 public:
     Obfuscator();
     /**
