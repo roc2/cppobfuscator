@@ -102,7 +102,9 @@ void Obfuscator::removeMultyLineComments(const QString &source)
         if(!sourceLine.isNull()){
             QString outputLine = sourceLine;
             qDebug() << __LINE__ <<  "s:" << sourceLine;
-            removeMultyLineCommentsR(outputLine, inComment);
+            while(removeMultyLineCommentsR(outputLine, inComment)){
+                ;
+            }
             destinationStream << outputLine << "\r\n";
         }
     }while(!sourceLine.isNull());
@@ -114,13 +116,15 @@ void Obfuscator::removeMultyLineComments(const QString &source)
     destinationFile.rename(source);
 }
 
-void Obfuscator::removeMultyLineCommentsR(QString &sourceLine, bool &inComment)
+bool Obfuscator::removeMultyLineCommentsR(QString &sourceLine, bool &inComment)
 {
+    bool found = false;
     QString commentBegin("/*");
     QString commentEnd("*/");
     QString outputLine;
     if(!inComment){
         if(sourceLine.contains(commentBegin)){
+            found = true;
             inComment = true;
             int index = sourceLine.indexOf(commentBegin);
             qDebug() << __LINE__ << index;
@@ -138,6 +142,7 @@ void Obfuscator::removeMultyLineCommentsR(QString &sourceLine, bool &inComment)
         }
     }else{
         if(sourceLine.contains(commentEnd)){
+            found = true;
             inComment = false;
             int index = sourceLine.indexOf(commentEnd);
             qDebug() << __LINE__ << index;
@@ -149,4 +154,5 @@ void Obfuscator::removeMultyLineCommentsR(QString &sourceLine, bool &inComment)
             sourceLine.clear();
         }
     }
+    return found;
 }

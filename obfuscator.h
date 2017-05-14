@@ -12,7 +12,7 @@ private:
     void removeSingleLineComments(const QString &source);
     QString removeSingleLineCommentsFromLine(const QString &sourceLine);
     void removeMultyLineComments(const QString &source);
-    void removeMultyLineCommentsR(QString &sourceLine, bool &inComment);
+    bool removeMultyLineCommentsR(QString &sourceLine, bool &inComment);
 public:
     Obfuscator();
     /**
