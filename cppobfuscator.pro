@@ -16,7 +16,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    obfuscator.cpp
+    obfuscator.cpp \
+    RemoveMultyLineComments.cpp \
+    RemoveSingleLineComments.cpp \
+    RemoveEmptyStrings.cpp
 
 HEADERS += \
-    obfuscator.h
+    obfuscator.h \
+    RemoveMultyLineComments.h \
+    RemoveSingleLineComments.h \
+    RemoveEmptyStrings.h

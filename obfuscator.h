@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #ifndef OBFUSCATOR_H
 #define OBFUSCATOR_H
 
@@ -13,6 +16,8 @@ private:
     template <class Functor>
     /**
      * @brief Opens text streams, runs functor f, closes streams.
+     * Functor should to have defined operator()(QTextStream &sourceStream,
+                    QTextStream &destinationStream)
      * @param source - Source file name.
      * @param f - Obfuscation stage's functor.
      */

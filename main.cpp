@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #include <QCoreApplication>
 
 #include "obfuscator.h"
