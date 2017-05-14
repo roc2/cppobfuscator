@@ -10,19 +10,13 @@ private:
     Obfuscator(Obfuscator&);
     QString getTmpFilename(const QString &source);
 
-    void removeSingleLineComments(const QString &source);
-    QString removeSingleLineCommentsFromLine(const QString &sourceLine);
-
-    void removeMultyLineComments(const QString &source);
+    template <class Functor>
     /**
-     * @brief Recursive function. It works with one text line.
-     * @param sourceLine - Text to modyfying.
-     * @param inComment - true if sourceLine begins in comment.
-     * @return true if comment tags found.
+     * @brief Opens text streams, runs functor f, closes streams.
+     * @param source - Source file name.
+     * @param f - Obfuscation stage's functor.
      */
-    bool removeMultyLineCommentsR(QString &sourceLine, bool &inComment);
-
-    void removeEmptyStrings(const QString &source);
+    void run(const QString &source, Functor f);
 public:
     Obfuscator();
     /**

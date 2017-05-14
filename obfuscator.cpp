@@ -7,6 +7,37 @@
 
 #include <assert.h>
 
+class RemoveMultyLineComments
+{
+public:
+    void operator()(QTextStream &sourceStream,
+                    QTextStream &destinationStream);
+    /**
+     * @brief Recursive function. It works with one text line.
+     * @param sourceLine - Text to modyfying.
+     * @param inComment - true if sourceLine begins in comment.
+     * @return true if comment tags found.
+     */
+    bool removeMultyLineCommentsR(QString &sourceLine, bool &inComment);
+
+};
+
+class RemoveSingleLineComments
+{
+public:
+    void operator()(QTextStream &sourceStream,
+                    QTextStream &destinationStream);
+    QString removeSingleLineCommentsFromLine(const QString &sourceLine);
+};
+
+
+class RemoveEmptyStrings
+{
+public:
+    void operator()(QTextStream &sourceStream,
+                    QTextStream &destinationStream);
+};
+
 Obfuscator::Obfuscator()
 {
 }
@@ -14,9 +45,9 @@ Obfuscator::Obfuscator()
 void Obfuscator::operator()(QStringList &sourceList)
 {
     foreach (const QString &source, sourceList) {
-        removeMultyLineComments(source);
-        removeSingleLineComments(source);
-        removeEmptyStrings(source);
+        run(source, RemoveMultyLineComments());
+        run(source, RemoveSingleLineComments());
+        run(source, RemoveEmptyStrings());
     }
 }
 
@@ -33,7 +64,8 @@ QString Obfuscator::getTmpFilename(const QString &source)
     return tmpFileName;
 }
 
-void Obfuscator::removeSingleLineComments(const QString &source)
+template <class Functor>
+void Obfuscator::run(const QString &source, Functor f)
 {
     QString tmpFileName = getTmpFilename(source);
     QFile destinationFile(tmpFileName);
@@ -50,14 +82,8 @@ void Obfuscator::removeSingleLineComments(const QString &source)
 
     QTextStream sourceStream(&sourceFile);
     QTextStream destinationStream(&destinationFile);
-    QString sourceLine;
 
-    do{
-        sourceLine = sourceStream.readLine();
-        if(!sourceLine.isNull()){
-            destinationStream << removeSingleLineCommentsFromLine(sourceLine);
-        }
-    }while(!sourceLine.isNull());
+    f(sourceStream, destinationStream);
 
     destinationFile.close();
     sourceFile.close();
@@ -66,7 +92,22 @@ void Obfuscator::removeSingleLineComments(const QString &source)
     destinationFile.rename(source);
 }
 
-QString Obfuscator::removeSingleLineCommentsFromLine(const QString &sourceLine)
+
+void RemoveSingleLineComments::operator()(QTextStream &sourceStream,
+                            QTextStream &destinationStream)
+{
+    QString sourceLine;
+
+    do{
+        sourceLine = sourceStream.readLine();
+        if(!sourceLine.isNull()){
+            destinationStream << removeSingleLineCommentsFromLine(sourceLine);
+        }
+    }while(!sourceLine.isNull());
+}
+
+QString RemoveSingleLineComments::removeSingleLineCommentsFromLine(
+        const QString &sourceLine)
 {
     QStringList list = sourceLine.split("//");
 
@@ -77,26 +118,11 @@ QString Obfuscator::removeSingleLineCommentsFromLine(const QString &sourceLine)
     return outputLine;
 }
 
-void Obfuscator::removeMultyLineComments(const QString &source)
+void RemoveMultyLineComments::operator()(QTextStream &sourceStream,
+                                         QTextStream &destinationStream)
 {
-    QString tmpFileName = getTmpFilename(source);
-    QFile destinationFile(tmpFileName);
-    QFile sourceFile(source);
-
-    assert(!destinationFile.exists());
-    assert(sourceFile.exists());
-
-    bool destinationOpened = destinationFile.open(QFile::WriteOnly);
-    bool sourceOpened = sourceFile.open(QFile::ReadOnly);
-
-    assert(destinationOpened);
-    assert(sourceOpened);
-
-    QTextStream sourceStream(&sourceFile);
-    QTextStream destinationStream(&destinationFile);
-    QString sourceLine;
-
     bool inComment = false;
+    QString sourceLine;
     do{
         sourceLine = sourceStream.readLine();
         if(!sourceLine.isNull()){
@@ -106,15 +132,10 @@ void Obfuscator::removeMultyLineComments(const QString &source)
             destinationStream << outputLine << "\r\n";
         }
     }while(!sourceLine.isNull());
-
-    destinationFile.close();
-    sourceFile.close();
-
-    sourceFile.remove();
-    destinationFile.rename(source);
 }
 
-bool Obfuscator::removeMultyLineCommentsR(QString &sourceLine, bool &inComment)
+bool RemoveMultyLineComments::removeMultyLineCommentsR(QString &sourceLine,
+                                                       bool &inComment)
 {
     bool found = false;
     QString commentBegin("/*");
@@ -154,23 +175,9 @@ bool Obfuscator::removeMultyLineCommentsR(QString &sourceLine, bool &inComment)
     return found;
 }
 
-void Obfuscator::removeEmptyStrings(const QString &source)
+void RemoveEmptyStrings::operator()(QTextStream &sourceStream,
+                            QTextStream &destinationStream)
 {
-    QString tmpFileName = getTmpFilename(source);
-    QFile destinationFile(tmpFileName);
-    QFile sourceFile(source);
-
-    assert(!destinationFile.exists());
-    assert(sourceFile.exists());
-
-    bool destinationOpened = destinationFile.open(QFile::WriteOnly);
-    bool sourceOpened = sourceFile.open(QFile::ReadOnly);
-
-    assert(destinationOpened);
-    assert(sourceOpened);
-
-    QTextStream sourceStream(&sourceFile);
-    QTextStream destinationStream(&destinationFile);
     QString sourceLine;
 
     do{
@@ -179,11 +186,5 @@ void Obfuscator::removeEmptyStrings(const QString &source)
             destinationStream << sourceLine << "\r\n";
         }
     }while(!sourceLine.isNull());
-
-    destinationFile.close();
-    sourceFile.close();
-
-    sourceFile.remove();
-    destinationFile.rename(source);
 }
 
