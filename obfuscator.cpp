@@ -16,6 +16,7 @@ void Obfuscator::operator()(QStringList &sourceList)
     foreach (const QString &source, sourceList) {
         removeMultyLineComments(source);
         removeSingleLineComments(source);
+        removeEmptyStrings(source);
     }
 }
 
@@ -152,3 +153,37 @@ bool Obfuscator::removeMultyLineCommentsR(QString &sourceLine, bool &inComment)
     }
     return found;
 }
+
+void Obfuscator::removeEmptyStrings(const QString &source)
+{
+    QString tmpFileName = getTmpFilename(source);
+    QFile destinationFile(tmpFileName);
+    QFile sourceFile(source);
+
+    assert(!destinationFile.exists());
+    assert(sourceFile.exists());
+
+    bool destinationOpened = destinationFile.open(QFile::WriteOnly);
+    bool sourceOpened = sourceFile.open(QFile::ReadOnly);
+
+    assert(destinationOpened);
+    assert(sourceOpened);
+
+    QTextStream sourceStream(&sourceFile);
+    QTextStream destinationStream(&destinationFile);
+    QString sourceLine;
+
+    do{
+        sourceLine = sourceStream.readLine();
+        if(!sourceLine.isEmpty()){
+            destinationStream << sourceLine << "\r\n";
+        }
+    }while(!sourceLine.isNull());
+
+    destinationFile.close();
+    sourceFile.close();
+
+    sourceFile.remove();
+    destinationFile.rename(source);
+}
+

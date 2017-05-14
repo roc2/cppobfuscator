@@ -9,8 +9,10 @@ class Obfuscator
 private:
     Obfuscator(Obfuscator&);
     QString getTmpFilename(const QString &source);
+
     void removeSingleLineComments(const QString &source);
     QString removeSingleLineCommentsFromLine(const QString &sourceLine);
+
     void removeMultyLineComments(const QString &source);
     /**
      * @brief Recursive function. It works with one text line.
@@ -19,6 +21,8 @@ private:
      * @return true if comment tags found.
      */
     bool removeMultyLineCommentsR(QString &sourceLine, bool &inComment);
+
+    void removeEmptyStrings(const QString &source);
 public:
     Obfuscator();
     /**
