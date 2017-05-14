@@ -9,8 +9,10 @@ class Obfuscator
 private:
     Obfuscator(Obfuscator&);
     QString getTmpFilename(const QString &source);
-    void removeComments(const QString &source);
-    QString removeCommentsFromLine(const QString &sourceLine);
+    void removeSingleLineComments(const QString &source);
+    QString removeSingleLineCommentsFromLine(const QString &sourceLine);
+    void removeMultyLineComments(const QString &source);
+    void removeMultyLineCommentsR(QString &sourceLine, bool &inComment);
 public:
     Obfuscator();
     /**
