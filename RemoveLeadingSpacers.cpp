@@ -3,7 +3,6 @@
 void RemoveLeadingSpacers::operator()(QTextStream &sourceStream,
                                        QTextStream &destinationStream)
 {
-    static const QString spacers("\t ");
     QString sourceLine;
 
     do{
@@ -12,6 +11,8 @@ void RemoveLeadingSpacers::operator()(QTextStream &sourceStream,
             int length = sourceLine.length();
             int firstSignificantChar = 0;
             while(firstSignificantChar < length){
+                static const QString spacers("\t ");
+
                 if(!spacers.contains(sourceLine[firstSignificantChar])){
                     break;
                 }

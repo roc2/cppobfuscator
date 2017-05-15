@@ -3,7 +3,6 @@
 void RemoveTrailingSpacers::operator()(QTextStream &sourceStream,
                                        QTextStream &destinationStream)
 {
-    static const QString spacers("\t ");
     QString sourceLine;
 
     do{
@@ -12,6 +11,8 @@ void RemoveTrailingSpacers::operator()(QTextStream &sourceStream,
             int length = sourceLine.length();
             int lastSignificantChar = length - 1;
             while(lastSignificantChar >= 0){
+                static const QString spacers("\t ");
+
                 if(!spacers.contains(sourceLine[lastSignificantChar])){
                     break;
                 }

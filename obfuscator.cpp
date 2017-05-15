@@ -15,6 +15,7 @@
 #include "RemoveEmptyStrings.h"
 #include "RemoveTrailingSpacers.h"
 #include "RemoveLeadingSpacers.h"
+#include "RemoveInsideSpacers.h"
 
 Obfuscator::Obfuscator()
 {
@@ -27,6 +28,7 @@ void Obfuscator::operator()(QStringList &sourceList)
         run(source, RemoveLeadingSpacers());
         run(source, RemoveMultyLineComments());
         run(source, RemoveSingleLineComments());
+        run(source, RemoveInsideSpacers());
         run(source, RemoveEmptyStrings());
     }
 }
