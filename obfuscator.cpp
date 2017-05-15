@@ -16,6 +16,7 @@
 #include "RemoveTrailingSpacers.h"
 #include "RemoveLeadingSpacers.h"
 #include "RemoveInsideSpacers.h"
+#include "RemoveLineSpliting.h"
 
 Obfuscator::Obfuscator()
 {
@@ -26,9 +27,10 @@ void Obfuscator::operator()(QStringList &sourceList)
     foreach (const QString &source, sourceList) {
         run(source, RemoveTrailingSpacers());
         run(source, RemoveLeadingSpacers());
+        run(source, RemoveInsideSpacers());
+        run(source, RemoveLineSpliting());
         run(source, RemoveMultyLineComments());
         run(source, RemoveSingleLineComments());
-        run(source, RemoveInsideSpacers());
         run(source, RemoveEmptyStrings());
     }
 }

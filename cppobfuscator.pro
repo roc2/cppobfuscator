@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     RemoveEmptyStrings.cpp \
     RemoveTrailingSpacers.cpp \
     RemoveLeadingSpacers.cpp \
-    RemoveInsideSpacers.cpp
+    RemoveInsideSpacers.cpp \
+    RemoveLineSpliting.cpp
 
 HEADERS += \
     obfuscator.h \
@@ -31,4 +32,5 @@ HEADERS += \
     RemoveEmptyStrings.h \
     RemoveTrailingSpacers.h \
     RemoveLeadingSpacers.h \
-    RemoveInsideSpacers.h
+    RemoveInsideSpacers.h \
+    RemoveLineSpliting.h
