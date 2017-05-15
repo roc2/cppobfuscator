@@ -29,7 +29,7 @@ void RemoveInsideSpacers::operator()(QTextStream &sourceStream,
                 static const QString operators("<>+-/=");
                 static const QString separators(operators +
                                                 spacers+
-                                                "*&.,;");
+                                                "*&.,;\'\"");
                 if(spacers.contains(cur)){
                     bool bothSideOperators = operators.contains(prev) &&
                             operators.contains(next);
