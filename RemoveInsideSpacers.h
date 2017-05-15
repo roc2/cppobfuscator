@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #ifndef REMOVEINSIDESPACERS_H
 #define REMOVEINSIDESPACERS_H
 

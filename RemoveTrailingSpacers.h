@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #ifndef REMOVETRAILINGSPACERS_H
 #define REMOVETRAILINGSPACERS_H
 

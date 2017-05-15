@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #include "RemoveLineSpliting.h"
 
 void RemoveLineSpliting::operator()(QTextStream &sourceStream,

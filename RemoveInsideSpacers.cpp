@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #include "RemoveInsideSpacers.h"
 
 void RemoveInsideSpacers::operator()(QTextStream &sourceStream,

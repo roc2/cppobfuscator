@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #include "RemoveLeadingSpacers.h"
 
 void RemoveLeadingSpacers::operator()(QTextStream &sourceStream,

@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #ifndef REMOVELEADINGSPACERS_H
 #define REMOVELEADINGSPACERS_H
 

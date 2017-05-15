@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #ifndef REMOVELINESPLITING_H
 #define REMOVELINESPLITING_H
 

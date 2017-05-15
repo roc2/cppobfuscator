@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #include "RemoveTrailingSpacers.h"
 
 void RemoveTrailingSpacers::operator()(QTextStream &sourceStream,
