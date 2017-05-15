@@ -19,10 +19,14 @@ SOURCES += main.cpp \
     obfuscator.cpp \
     RemoveMultyLineComments.cpp \
     RemoveSingleLineComments.cpp \
-    RemoveEmptyStrings.cpp
+    RemoveEmptyStrings.cpp \
+    RemoveTrailingSpacers.cpp \
+    RemoveLeadingSpacers.cpp
 
 HEADERS += \
     obfuscator.h \
     RemoveMultyLineComments.h \
     RemoveSingleLineComments.h \
-    RemoveEmptyStrings.h
+    RemoveEmptyStrings.h \
+    RemoveTrailingSpacers.h \
+    RemoveLeadingSpacers.h

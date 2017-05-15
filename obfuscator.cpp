@@ -13,6 +13,8 @@
 #include "RemoveMultyLineComments.h"
 #include "RemoveSingleLineComments.h"
 #include "RemoveEmptyStrings.h"
+#include "RemoveTrailingSpacers.h"
+#include "RemoveLeadingSpacers.h"
 
 Obfuscator::Obfuscator()
 {
@@ -21,6 +23,8 @@ Obfuscator::Obfuscator()
 void Obfuscator::operator()(QStringList &sourceList)
 {
     foreach (const QString &source, sourceList) {
+        run(source, RemoveTrailingSpacers());
+        run(source, RemoveLeadingSpacers());
         run(source, RemoveMultyLineComments());
         run(source, RemoveSingleLineComments());
         run(source, RemoveEmptyStrings());
