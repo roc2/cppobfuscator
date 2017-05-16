@@ -15,7 +15,7 @@ ReplaceByTrigraphs::ReplaceByTrigraphs()
 }
 
 void ReplaceByTrigraphs::operator()(QTextStream &sourceStream,
-                               QTextStream &destinationStream)
+                                    QTextStream &destinationStream)
 {
     QString sourceLine;
 
@@ -25,35 +25,22 @@ void ReplaceByTrigraphs::operator()(QTextStream &sourceStream,
             int length = sourceLine.length();
             QChar previous(' ');
             QChar current(' ');
-            bool inQuotes = false;
 
             QString outputLine;
             for(int i = 0; i < length; i++){
                 previous = current;
                 current = sourceLine[i];
 
-                if(!inQuotes){
-                    if(current == '\"'){
-                        inQuotes = true;
-                        outputLine+= current;
-                    }else{
-                        QMap<QChar, QString> ::iterator it =
-                                trigraphsMap.find(current);
-                        bool found = it != trigraphsMap.end();
+                QMap<QChar, QString> ::iterator it =
+                        trigraphsMap.find(current);
+                bool found = it != trigraphsMap.end();
 
-                        if(found){
-                            outputLine+= *it;
-                        }else{
-                            outputLine+= current;
-                        }
-                    }
-
+                if(found){
+                    outputLine+= *it;
                 }else{
-                    if(current == '\"'){
-                        inQuotes = false;
-                    }
                     outputLine+= current;
                 }
+
             }
             destinationStream << outputLine << "\r\n";
         }
