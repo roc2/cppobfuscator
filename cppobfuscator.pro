@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     RemoveTrailingSpacers.cpp \
     RemoveLeadingSpacers.cpp \
     RemoveInsideSpacers.cpp \
-    RemoveLineSpliting.cpp
+    RemoveLineSpliting.cpp \
+    ReplaceByTrigraphs.cpp
 
 HEADERS += \
     obfuscator.h \
@@ -33,4 +34,5 @@ HEADERS += \
     RemoveTrailingSpacers.h \
     RemoveLeadingSpacers.h \
     RemoveInsideSpacers.h \
-    RemoveLineSpliting.h
+    RemoveLineSpliting.h \
+    ReplaceByTrigraphs.h
