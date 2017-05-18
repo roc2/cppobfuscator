@@ -18,6 +18,7 @@
 #include "RemoveInsideSpacers.h"
 #include "RemoveLineSpliting.h"
 #include "ReplaceByTrigraphs.h"
+#include "RemoveLineFeed.h"
 
 Obfuscator::Obfuscator()
 {
@@ -35,6 +36,7 @@ void Obfuscator::operator()(QStringList &sourceList)
         run(source, RemoveSingleLineComments());
         run(source, RemoveEmptyStrings());
         run(source, ReplaceByTrigraphs());
+        run(source, RemoveLineFeed());
     }
 }
 
