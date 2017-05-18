@@ -8,33 +8,9 @@ void ReplaceCharByDigit::operator()(QTextStream &sourceStream,
     do{
         sourceLine = sourceStream.readLine();
         if((!sourceLine.isNull()) && (!sourceLine.isEmpty())){
-            QString outString;
-            bool inQuotes = false;
-            QChar previousChar = ' ';
-            foreach (QChar c, sourceLine) {
-                QString replacer = c;
-                if(inQuotes){
-                    bool isNotEscape = previousChar != '\\';
-                    bool isNotSlash = c != '\\';
+            QString outString = replaceBetween(sourceLine, '\"');
+            outString = replaceBetween(outString, '\'');
 
-                    if(isNotSlash && isNotEscape){
-                        if(c == '\"'){
-                            inQuotes = false;
-                        }else{
-                            replacer = QString("\\") +
-                                    QString::number(int(c.toLatin1()), 8);
-                        }
-                    }else{
-                    }
-                }else{
-                    if(c == '\"'){
-                        inQuotes = true;
-                    }
-                }
-
-                outString+= replacer;
-                previousChar = c;
-            }
             destinationStream << outString;
         }else{
             destinationStream << sourceLine;
@@ -42,3 +18,48 @@ void ReplaceCharByDigit::operator()(QTextStream &sourceStream,
         destinationStream << "\r\n";
     }while(!sourceLine.isNull());
 }
+
+QString ReplaceCharByDigit::getReplacer(QChar currentChar, QChar previousChar)
+{
+    QString replacer = currentChar;
+    bool isNotEscape = previousChar != '\\';
+    bool isNotSlash = currentChar != '\\';
+
+    if(isNotSlash && isNotEscape){
+        if(currentChar == '\"'){
+        }else{
+            replacer = QString("\\") +
+                    QString::number(int(currentChar.toLatin1()), 8);
+        }
+    }else{
+    }
+
+    return replacer;
+}
+
+QString ReplaceCharByDigit::replaceBetween(const QString &sourceLine, char quote)
+{
+    QString outString;
+    bool inQuotes = false;
+    QChar previousChar = ' ';
+    foreach (QChar c, sourceLine) {
+        QString replacer = c;
+        if(inQuotes){
+            if(c == quote){
+                inQuotes = false;
+            }else{
+                replacer = getReplacer(c, previousChar);
+            }
+        }else{
+            if(c == quote){
+                inQuotes = true;
+            }
+        }
+
+        outString+= replacer;
+        previousChar = c;
+    }
+
+    return outString;
+}
+

@@ -36,13 +36,13 @@ void ReplaceByTrigraphs::operator()(QTextStream &sourceStream,
                     bool isNotSlash = c != '\\';
 
                     if(isNotSlash && isNotEscape){
-                        if(c == '\"'){
+                        if((c == '\"') || (c == '\'')){
                             inQuotes = false;
                         }else{
                         }
                     }
                 }else{
-                    if(c == '\"'){
+                    if((c == '\"') || (c == '\'')){
                         inQuotes = true;
                     }else{
                         QMap<QChar, QString> ::iterator it =
