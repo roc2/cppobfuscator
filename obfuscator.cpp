@@ -26,6 +26,7 @@ Obfuscator::Obfuscator()
 void Obfuscator::operator()(QStringList &sourceList)
 {
     foreach (const QString &source, sourceList) {
+        qDebug() << source;
         run(source, RemoveTrailingSpacers());
         run(source, RemoveLeadingSpacers());
         run(source, RemoveInsideSpacers());
