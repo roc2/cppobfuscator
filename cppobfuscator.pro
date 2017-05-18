@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     RemoveInsideSpacers.cpp \
     RemoveLineSpliting.cpp \
     ReplaceByTrigraphs.cpp \
-    RemoveLineFeed.cpp
+    RemoveLineFeed.cpp \
+    ReplaceCharByDigit.cpp
 
 HEADERS += \
     obfuscator.h \
@@ -37,4 +38,5 @@ HEADERS += \
     RemoveInsideSpacers.h \
     RemoveLineSpliting.h \
     ReplaceByTrigraphs.h \
-    RemoveLineFeed.h
+    RemoveLineFeed.h \
+    ReplaceCharByDigit.h

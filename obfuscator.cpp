@@ -19,6 +19,7 @@
 #include "RemoveLineSpliting.h"
 #include "ReplaceByTrigraphs.h"
 #include "RemoveLineFeed.h"
+#include "ReplaceCharByDigit.h"
 
 Obfuscator::Obfuscator()
 {
@@ -35,6 +36,7 @@ void Obfuscator::operator()(QStringList &sourceList)
         run(source, RemoveMultyLineComments());
         run(source, RemoveSingleLineComments());
         run(source, RemoveEmptyStrings());
+        run(source, ReplaceCharByDigit());
         run(source, ReplaceByTrigraphs());
         run(source, RemoveLineFeed());
     }

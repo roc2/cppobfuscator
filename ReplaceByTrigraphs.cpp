@@ -1,6 +1,5 @@
 #include "ReplaceByTrigraphs.h"
 
-
 ReplaceByTrigraphs::ReplaceByTrigraphs()
 {
     trigraphsMap.insert('#', "\?\?=");
@@ -23,24 +22,41 @@ void ReplaceByTrigraphs::operator()(QTextStream &sourceStream,
         sourceLine = sourceStream.readLine();
         if(!sourceLine.isNull()){
             int length = sourceLine.length();
-            QChar previous(' ');
-            QChar current(' ');
+            QChar previousChar(' ');
+            QChar c(' ');
 
             QString outputLine;
+            bool inQuotes = false;
             for(int i = 0; i < length; i++){
-                previous = current;
-                current = sourceLine[i];
+                previousChar = c;
+                c = sourceLine[i];
+                QString replacer = c;
+                if(inQuotes){
+                    bool isNotEscape = previousChar != '\\';
+                    bool isNotSlash = c != '\\';
 
-                QMap<QChar, QString> ::iterator it =
-                        trigraphsMap.find(current);
-                bool found = it != trigraphsMap.end();
-
-                if(found){
-                    outputLine+= *it;
+                    if(isNotSlash && isNotEscape){
+                        if(c == '\"'){
+                            inQuotes = false;
+                        }else{
+                        }
+                    }
                 }else{
-                    outputLine+= current;
+                    if(c == '\"'){
+                        inQuotes = true;
+                    }else{
+                        QMap<QChar, QString> ::iterator it =
+                                trigraphsMap.find(c);
+                        bool found = it != trigraphsMap.end();
+
+                        if(found){
+                            replacer = *it;
+                        }else{
+                        }
+                    }
                 }
 
+                outputLine+= replacer;
             }
             destinationStream << outputLine << "\r\n";
         }
