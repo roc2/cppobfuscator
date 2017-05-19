@@ -3,9 +3,10 @@
 
 #include <QTextStream>
 
+struct ReplaceCharByDigitPrivate;
 class ReplaceCharByDigit
 {
-public:
+    ReplaceCharByDigitPrivate *privateMembers;
 public:
     /// Trailing spacers should be deleted before calling this operator.
     void operator()(QTextStream &sourceStream,

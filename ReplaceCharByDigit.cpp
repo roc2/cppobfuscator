@@ -1,5 +1,15 @@
 #include "ReplaceCharByDigit.h"
 
+#include <random>
+#include <time.h>
+
+struct ReplaceCharByDigitPrivate
+{
+    static std::default_random_engine randomEngine;
+};
+
+std::default_random_engine ReplaceCharByDigitPrivate::randomEngine(time(NULL));
+
 void ReplaceCharByDigit::operator()(QTextStream &sourceStream,
                                     QTextStream &destinationStream)
 {
@@ -28,8 +38,14 @@ QString ReplaceCharByDigit::getReplacer(QChar currentChar, QChar previousChar)
     if(isNotSlash && isNotEscape){
         if(currentChar == '\"'){
         }else{
-            replacer = QString("\\") +
-                    QString::number(int(currentChar.toLatin1()), 8);
+            bool hexNotOct = privateMembers->randomEngine() % 2 == 0;
+            if(hexNotOct){
+                replacer = QString("\\x") +
+                        QString::number(int(currentChar.toLatin1()), 16);
+            }else{
+                replacer = QString("\\") +
+                        QString::number(int(currentChar.toLatin1()), 8);
+            }
         }
     }else{
     }
