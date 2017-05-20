@@ -11,7 +11,7 @@ public:
     /// Trailing spacers should be deleted before calling this operator.
     void operator()(QTextStream &sourceStream,
                     QTextStream &destinationStream);
-    QString getReplacer(QChar currentChar, QChar previousChar);
+    QString getReplacer(QString symbol);
     QString replaceBetween(const QString &sourceLine, char quote);
 };
 
