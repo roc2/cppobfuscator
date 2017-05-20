@@ -41,10 +41,10 @@ QString ReplaceCharByDigit::getReplacer(QChar currentChar, QChar previousChar)
             bool hexNotOct = privateMembers->randomEngine() % 2 == 0;
             if(hexNotOct){
                 replacer = QString("\\x") +
-                        QString::number(int(currentChar.toLatin1()), 16);
+                        QString::number(currentChar.unicode(), 16);
             }else{
                 replacer = QString("\\") +
-                        QString::number(int(currentChar.toLatin1()), 8);
+                        QString::number(currentChar.unicode(), 8);
             }
         }
     }else{
