@@ -1,127 +1,53 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #include "ReplaceCharByDigit.h"
 
 #include <random>
 #include <time.h>
+#include <assert.h>
 
 #include <QDebug>
 
-class StringSplitter
+#include <StringSplitter.h>
+#include <QMap>
+
+class ReplaceCharByDigitPrivate
 {
-    StringSplitter();
-    StringSplitter(StringSplitter&);
-    const QString &line;
-    QString::const_iterator it;
+    ReplaceCharByDigitPrivate(ReplaceCharByDigitPrivate &);
 public:
-    StringSplitter(const QString &line);
-    QString getSymbol();
-    bool isEnd();
-    bool isTwoCharEcsSecond(const QChar &c);
-    bool isHexOrUnicodeSecond(const QChar &c);
-    bool isHexDigit(const QChar &c);
-};
-
-StringSplitter::StringSplitter(const QString &line) :
-    line(line),
-    it(line.begin())
-{
-}
-
-QString StringSplitter::getSymbol()
-{
-    QString output;
-    if(it != line.end()){
-        QString::const_iterator firstIt = it;
-        output += *firstIt;
-        ++it;
-        if((*firstIt) != '\\'){
-        }else{// It is an escape sequence
-            bool isHex = false;
-            while(it != line.end()){
-                const QChar &c = *it;
-                bool itIsASecond = output.size() == 1;
-                if(itIsASecond){
-                    if(c.isDigit()){
-                        output+= c;
-                        ++it;
-                    }else if (isTwoCharEcsSecond(c)){
-                        output+= c;
-                        ++it;
-                        break;
-                    }else if(isHexOrUnicodeSecond(c)){
-                        isHex = true;
-                        output+= c;
-                        ++it;
-                    }else{
-                        break;
-                    }
-                }else //It should be a hex or oct number
-                {
-                    if(isHex){
-                        if(isHexDigit(c)){
-                            output+= c;
-                            ++it;
-                        }else{
-                            break;
-                        }
-                    }else{
-                        if(c.isDigit() && (c <= '7') && (output.length() < 4)){
-                            output+= c;
-                            ++it;
-                        }else{
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return output;
-}
-
-bool StringSplitter::isTwoCharEcsSecond(const QChar &c)
-{
-    return (c == '\'') ||
-            (c == '\"') ||
-            (c == '?') ||
-            (c == '\\') ||
-            (c == 'a') ||
-            (c == 'b') ||
-            (c == 'f') ||
-            (c == 'n') ||
-            (c == 'r') ||
-            (c == 't') ||
-            (c == 'v');
-}
-
-bool StringSplitter::isHexOrUnicodeSecond(const QChar &c)
-{
-    return (c == 'x') ||
-            (c == 'u') ||
-            (c == 'U');
-}
-
-bool StringSplitter::isHexDigit(const QChar &c)
-{
-    return c.isDigit() ||
-            (c.toLower() == 'a') ||
-            (c.toLower() == 'b') ||
-            (c.toLower() == 'c') ||
-            (c.toLower() == 'd') ||
-            (c.toLower() == 'e') ||
-            (c.toLower() == 'f');
-}
-
-bool StringSplitter::isEnd()
-{
-    return it == line.end();
-}
-
-struct ReplaceCharByDigitPrivate
-{
     static std::default_random_engine randomEngine;
+    QMap<QString, QChar> escMap;
+    ReplaceCharByDigitPrivate();
 };
 
 std::default_random_engine ReplaceCharByDigitPrivate::randomEngine(time(NULL));
+
+ReplaceCharByDigitPrivate::ReplaceCharByDigitPrivate()
+{
+    escMap.insert("\\'", '\'');
+    escMap.insert("\\", '\"');
+    escMap.insert("\\?", '\?');
+    escMap.insert("\\\\", '\\');
+    escMap.insert("\\0", '\0');
+    escMap.insert("\\a", '\a');
+    escMap.insert("\\b", '\b');
+    escMap.insert("\\f", '\f');
+    escMap.insert("\\n", '\n');
+    escMap.insert("\\r", '\r');
+    escMap.insert("\\t", '\t');
+    escMap.insert("\\v", '\v');
+}
+
+ReplaceCharByDigit::ReplaceCharByDigit()
+{
+    privateMembers = new ReplaceCharByDigitPrivate;
+}
+
+ReplaceCharByDigit::~ReplaceCharByDigit()
+{
+    delete privateMembers;
+}
 
 void ReplaceCharByDigit::operator()(QTextStream &sourceStream,
                                     QTextStream &destinationStream)
@@ -143,25 +69,46 @@ void ReplaceCharByDigit::operator()(QTextStream &sourceStream,
     }while(!sourceLine.isNull());
 }
 
-QString ReplaceCharByDigit::getReplacer(QString symbol)
+QString ReplaceCharByDigit::getReplacer(const QString &symbol)
 {
     QString replacer = symbol;
 
-    if(symbol.length() == 1){
-        bool hexNotOct = privateMembers->randomEngine() % 2 == 0;
-        if(hexNotOct){
-            replacer = QString("\\x") +
-                    QString::number(symbol[0].unicode(), 16);
-        }else{
-            replacer = QString("\\") +
-                    QString::number(symbol[0].unicode(), 8);
-        }
+    if(symbol.length() == 2){
+        qDebug() << __LINE__ << replacer;
+        QMap<QString, QChar>::iterator it =
+                privateMembers->escMap.find(symbol);
+
+        assert(it != privateMembers->escMap.end());
+
+        replacer = getReplacer(*it);
+    }else if(symbol.length() == 1){
+        qDebug() << __LINE__ << replacer;
+        replacer = getReplacer(symbol[0]);
     }else{
     }
 
     qDebug() << __LINE__ << replacer;
     return replacer;
 }
+
+QString ReplaceCharByDigit::getReplacer(QChar symbol)
+{
+    QString replacer = symbol;
+
+    qDebug() << __LINE__ << replacer;
+    bool hexNotOct = privateMembers->randomEngine() % 2 == 0;
+    if(hexNotOct){
+        replacer = QString("\\x") +
+                QString::number(symbol.unicode(), 16);
+    }else{
+        replacer = QString("\\") +
+                QString::number(symbol.unicode(), 8);
+    }
+
+    qDebug() << __LINE__ << replacer;
+    return replacer;
+}
+
 
 QString ReplaceCharByDigit::replaceBetween(const QString &sourceLine, char quote)
 {

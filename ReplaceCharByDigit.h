@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #ifndef REPLACECHARBYDIGIT_H
 #define REPLACECHARBYDIGIT_H
 
@@ -8,10 +11,13 @@ class ReplaceCharByDigit
 {
     ReplaceCharByDigitPrivate *privateMembers;
 public:
+    ReplaceCharByDigit();
+    ~ReplaceCharByDigit();
     /// Trailing spacers should be deleted before calling this operator.
     void operator()(QTextStream &sourceStream,
                     QTextStream &destinationStream);
-    QString getReplacer(QString symbol);
+    QString getReplacer(QChar symbol);
+    QString getReplacer(const QString &symbol);
     QString replaceBetween(const QString &sourceLine, char quote);
 };
 

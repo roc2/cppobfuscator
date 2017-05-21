@@ -1,3 +1,6 @@
+/** @file
+  * @author Yunkin Ilya.
+  */
 #ifndef REPLACEBYTRIGRAPHS_H
 #define REPLACEBYTRIGRAPHS_H
 
