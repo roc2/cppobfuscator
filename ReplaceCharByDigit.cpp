@@ -7,8 +7,6 @@
 #include <time.h>
 #include <assert.h>
 
-#include <QDebug>
-
 #include <StringSplitter.h>
 #include <QMap>
 
@@ -56,7 +54,7 @@ void ReplaceCharByDigit::operator()(QTextStream &sourceStream,
 
     do{
         sourceLine = sourceStream.readLine();
-        qDebug() << __LINE__ << sourceLine;
+
         if((!sourceLine.isNull()) && (!sourceLine.isEmpty())){
             QString outString = replaceBetween(sourceLine, '\"');
             outString = replaceBetween(outString, '\'');
@@ -74,7 +72,6 @@ QString ReplaceCharByDigit::getReplacer(const QString &symbol)
     QString replacer = symbol;
 
     if(symbol.length() == 2){
-        qDebug() << __LINE__ << replacer;
         QMap<QString, QChar>::iterator it =
                 privateMembers->escMap.find(symbol);
 
@@ -82,12 +79,10 @@ QString ReplaceCharByDigit::getReplacer(const QString &symbol)
 
         replacer = getReplacer(*it);
     }else if(symbol.length() == 1){
-        qDebug() << __LINE__ << replacer;
         replacer = getReplacer(symbol[0]);
     }else{
     }
 
-    qDebug() << __LINE__ << replacer;
     return replacer;
 }
 
@@ -95,7 +90,6 @@ QString ReplaceCharByDigit::getReplacer(QChar symbol)
 {
     QString replacer = symbol;
 
-    qDebug() << __LINE__ << replacer;
     bool hexNotOct = privateMembers->randomEngine() % 2 == 0;
     if(hexNotOct){
         replacer = QString("\\x") +
@@ -105,7 +99,6 @@ QString ReplaceCharByDigit::getReplacer(QChar symbol)
                 QString::number(symbol.unicode(), 8);
     }
 
-    qDebug() << __LINE__ << replacer;
     return replacer;
 }
 
@@ -119,7 +112,7 @@ QString ReplaceCharByDigit::replaceBetween(const QString &sourceLine, char quote
     while (!splitter.isEnd()) {
         QString symbol = splitter.getSymbol();
         QString replacer = symbol;
-        qDebug() << __LINE__ << symbol;
+
         if(inQuotes){
             if(symbol == QString(quote)){
                 inQuotes = false;
@@ -135,7 +128,6 @@ QString ReplaceCharByDigit::replaceBetween(const QString &sourceLine, char quote
         outString+= replacer;
     }
 
-    qDebug() << __LINE__ << outString;
     return outString;
 }
 
